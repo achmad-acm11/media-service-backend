@@ -9,6 +9,8 @@ const {
   apiResponseNotFound,
 } = require("../responses/apiResponse");
 const { HOSTNAME } = process.env;
+const fs = require("fs");
+const path = require("path");
 
 /* Routes Media listing. */
 router.get("/", async (req, res, next) => {
@@ -86,7 +88,10 @@ router.delete("/:id", async (req, res, next) => {
         })
       );
     }
-
+    await fs.unlink(path.join(`public/${media.image}`), (err) => {
+      console.log(err);
+    });
+    
     await media.destroy();
 
     const response = apiResponse("Delete image success", "success", 200, {
